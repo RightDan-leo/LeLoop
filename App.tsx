@@ -14,7 +14,7 @@ import ReactFlow, {
   MarkerType,
 } from 'reactflow';
 // import 'reactflow/dist/style.css'; // Removed: handled via CDN in index.html to avoid loader issues
-import { Play, Pause, RotateCcw, Activity, StepForward } from 'lucide-react';
+import { Play, Pause, RotateCcw, Activity, StepForward, Download, Upload } from 'lucide-react';
 
 import { NodeType, EcoNode, EcoEdge, SimulationState, NodeData, EdgeData } from './types';
 import { Sidebar } from './components/Sidebar';
@@ -88,6 +88,7 @@ const getEdgeLabel = (data?: EdgeData) => {
 
 const AppContent = () => {
   const reactFlowInstance = useReactFlow();
+  const fileInputRef = useRef<HTMLInputElement>(null);
   
   // React Flow State
   const [nodes, setNodes, onNodesChange] = useNodesState(INITIAL_NODES);
@@ -213,11 +214,73 @@ const AppContent = () => {
     );
   }, [setEdges]);
 
-  const resetSimulation = () => {
+  const resetSimulation = useCallback(() => {
     setSimState({ isPlaying: false, tick: 0, history: [] });
     // Reset pool values to 0
     setNodes((nds) => nds.map(n => ({...n, data: {...n.data, value: 0}})));
-  };
+  }, [setNodes]);
+
+  // --- File Save/Load Logic ---
+  
+  const handleSave = useCallback(() => {
+    const flowData = {
+      nodes: nodesRef.current,
+      edges: edgesRef.current,
+      version: '1.0'
+    };
+    
+    const jsonString = JSON.stringify(flowData, null, 2);
+    const blob = new Blob([jsonString], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    
+    const date = new Date().toISOString().slice(0, 10);
+    link.href = url;
+    link.download = `ecoflow-layout-${date}.json`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  }, []);
+
+  const handleLoadClick = useCallback(() => {
+    fileInputRef.current?.click();
+  }, []);
+
+  const handleFileChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const result = e.target?.result as string;
+        const flowData = JSON.parse(result);
+        
+        if (flowData.nodes && flowData.edges) {
+          // Reset simulation first
+          resetSimulation();
+          
+          // Restore nodes and edges
+          setNodes(flowData.nodes);
+          setEdges(flowData.edges);
+          
+          // Clear selection
+          setSelectedNodeId(null);
+          setSelectedEdgeId(null);
+        } else {
+          alert('无法读取文件：格式不正确');
+        }
+      } catch (err) {
+        console.error(err);
+        alert('无法解析文件');
+      }
+    };
+    reader.readAsText(file);
+    
+    // Clear input so the same file can be selected again if needed
+    event.target.value = '';
+  }, [setNodes, setEdges, resetSimulation]);
 
   // --- Simulation Logic ---
 
@@ -295,6 +358,15 @@ const AppContent = () => {
 
   return (
     <div className="flex flex-col h-screen w-screen bg-slate-950 text-white">
+      {/* Hidden File Input for Loading */}
+      <input 
+        type="file" 
+        ref={fileInputRef}
+        onChange={handleFileChange}
+        accept=".json"
+        className="hidden"
+      />
+
       {/* Header */}
       <header className="h-14 bg-slate-900 border-b border-slate-800 flex items-center justify-between px-4 shrink-0">
         <div className="flex items-center gap-2">
@@ -338,7 +410,27 @@ const AppContent = () => {
             </button>
         </div>
 
-        <div className="flex items-center gap-4 text-sm">
+        <div className="flex items-center gap-3">
+             <div className="flex items-center gap-2 bg-slate-800 p-1 rounded-lg border border-slate-700 mr-4">
+                 <button 
+                     onClick={handleSave}
+                     className="flex items-center gap-2 px-3 py-1.5 rounded-md text-xs font-medium text-slate-400 hover:text-white hover:bg-slate-700 transition-colors"
+                     title="保存布局"
+                 >
+                     <Download size={14} />
+                     保存
+                 </button>
+                 <div className="h-4 w-[1px] bg-slate-600"></div>
+                 <button 
+                     onClick={handleLoadClick}
+                     className="flex items-center gap-2 px-3 py-1.5 rounded-md text-xs font-medium text-slate-400 hover:text-white hover:bg-slate-700 transition-colors"
+                     title="读取布局"
+                 >
+                     <Upload size={14} />
+                     读取
+                 </button>
+            </div>
+
             <div className="flex flex-col items-end">
                 <span className="text-slate-400 text-xs uppercase tracking-wider">时间步</span>
                 <span className="font-mono text-blue-400 font-bold">{simState.tick}</span>
