@@ -46,7 +46,14 @@
             "label": "汇聚器",
             "desc": "合并资源"
         },
+        "text": {
+            "label": "文本",
+            "desc": "添加注释"
+        },
         "stock": "库存"
+    },
+    "properties": {
+        "font_size": "字体大小"
     },
     "stats": {
         "gold_mine": "金矿",

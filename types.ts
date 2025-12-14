@@ -7,6 +7,7 @@ export enum NodeType {
   CONVERTER = 'converter',
   SPLITTER = 'splitter',
   MERGER = 'merger',
+  TEXT = 'text',
 }
 
 export interface NodeData {
@@ -24,6 +25,9 @@ export interface NodeData {
 
   // For visual tracking in charts (random ID assigned on creation)
   id: string;
+
+  // For Text Node
+  fontSize?: number;
 }
 
 export interface EdgeData {

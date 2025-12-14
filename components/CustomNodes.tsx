@@ -184,3 +184,19 @@ export const MergerNode = memo(({ data, selected }: NodeProps<NodeData>) => {
     </BaseNodeWrapper>
   );
 });
+
+// --- Text Node (Annotation) ---
+export const TextNode = memo(({ data, selected }: NodeProps<NodeData>) => {
+  return (
+    <div
+      className={`min-w-[100px] min-h-[50px] p-2 transition-all duration-200 border-2 rounded ${selected ? 'border-dashed border-white/50 bg-white/5' : 'border-transparent hover:border-white/20'}`}
+      style={{
+        fontSize: data.fontSize || 16,
+      }}
+    >
+      <div className="text-slate-200 whitespace-pre-wrap break-words leading-relaxed">
+        {data.label}
+      </div>
+    </div>
+  );
+});

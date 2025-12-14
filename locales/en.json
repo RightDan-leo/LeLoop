@@ -46,7 +46,14 @@
             "label": "Merger",
             "desc": "Combines resources"
         },
+        "text": {
+            "label": "Text",
+            "desc": "Add annotation"
+        },
         "stock": "Stock"
+    },
+    "properties": {
+        "font_size": "Font Size"
     },
     "stats": {
         "gold_mine": "Gold Mine",
