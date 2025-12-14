@@ -1,0 +1,59 @@
+{
+    "app": {
+        "title": "Legou Loop",
+        "title_suffix": "Simulator",
+        "tick": "Tick"
+    },
+    "actions": {
+        "run": "Run",
+        "pause": "Pause",
+        "step": "Step",
+        "reset": "Reset Simulation",
+        "save": "Save Layout",
+        "load": "Load Layout",
+        "export": "Export CSV",
+        "save_btn": "Save",
+        "load_btn": "Load",
+        "export_btn": "Export"
+    },
+    "sidebar": {
+        "title": "Toolbox",
+        "subtitle": "Drag nodes to canvas"
+    },
+    "nodes": {
+        "new_prefix": "New ",
+        "source": {
+            "label": "Source",
+            "desc": "Generates resources"
+        },
+        "pool": {
+            "label": "Pool",
+            "desc": "Stores resources"
+        },
+        "converter": {
+            "label": "Converter",
+            "desc": "Converts resources"
+        },
+        "drain": {
+            "label": "Drain",
+            "desc": "Consumes resources"
+        },
+        "splitter": {
+            "label": "Splitter",
+            "desc": "Distributes resources"
+        },
+        "merger": {
+            "label": "Merger",
+            "desc": "Combines resources"
+        },
+        "stock": "Stock"
+    },
+    "stats": {
+        "gold_mine": "Gold Mine",
+        "treasury": "Treasury"
+    },
+    "errors": {
+        "file_format": "Cannot read file: Incorrect format",
+        "file_parse": "Cannot parse file"
+    }
+}

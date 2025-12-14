@@ -5,6 +5,8 @@ export enum NodeType {
   POOL = 'pool',
   DRAIN = 'drain',
   CONVERTER = 'converter',
+  SPLITTER = 'splitter',
+  MERGER = 'merger',
 }
 
 export interface NodeData {
@@ -13,15 +15,15 @@ export interface NodeData {
   value: number;
   // Capacity limit (optional, for Pools)
   capacity?: number;
-  
+
   // Generation or Consumption rate per tick
   // If isRandom is true, 'rate' is the MINIMUM value, and 'rateMax' is the MAXIMUM.
-  rate: number; 
+  rate: number;
   rateMax?: number;
   isRandom?: boolean;
 
   // For visual tracking in charts (random ID assigned on creation)
-  id: string; 
+  id: string;
 }
 
 export interface EdgeData {
@@ -36,7 +38,7 @@ export type EcoEdge = Edge<EdgeData>;
 
 export interface SimulationHistoryPoint {
   tick: number;
-  [nodeId: string]: number; // dynamic keys for node values
+  [nodeId: string]: number; // dynamic keys for node values (e.g. "pool-1") and stats (e.g. "conv-1:rate")
 }
 
 export interface SimulationState {

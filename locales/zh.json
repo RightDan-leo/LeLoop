@@ -1,0 +1,59 @@
+{
+    "app": {
+        "title": "Legou Loop",
+        "title_suffix": "模拟器",
+        "tick": "时间步"
+    },
+    "actions": {
+        "run": "运行",
+        "pause": "暂停",
+        "step": "单步",
+        "reset": "重置模拟",
+        "save": "保存布局",
+        "load": "读取布局",
+        "export": "导出CSV数据",
+        "save_btn": "保存",
+        "load_btn": "读取",
+        "export_btn": "导出数据"
+    },
+    "sidebar": {
+        "title": "工具箱",
+        "subtitle": "拖拽节点到画布"
+    },
+    "nodes": {
+        "new_prefix": "新",
+        "source": {
+            "label": "资源源",
+            "desc": "生成资源"
+        },
+        "pool": {
+            "label": "资源池",
+            "desc": "存储资源"
+        },
+        "converter": {
+            "label": "转换器",
+            "desc": "转换输入资源"
+        },
+        "drain": {
+            "label": "消耗器",
+            "desc": "消耗资源"
+        },
+        "splitter": {
+            "label": "分流器",
+            "desc": "分配资源"
+        },
+        "merger": {
+            "label": "汇聚器",
+            "desc": "合并资源"
+        },
+        "stock": "库存"
+    },
+    "stats": {
+        "gold_mine": "金矿",
+        "treasury": "国库"
+    },
+    "errors": {
+        "file_format": "无法读取文件：格式不正确",
+        "file_parse": "无法解析文件"
+    }
+}

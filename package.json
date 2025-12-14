@@ -1,5 +1,5 @@
 {
-  "name": "ecoflow-模拟器",
+  "name": "legou-loop-模拟器",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -9,16 +9,20 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "i18next": "^25.7.2",
+    "i18next-browser-languagedetector": "^8.2.0",
+    "lucide-react": "0.344.0",
     "react": "^19.2.1",
     "react-dom": "^19.2.1",
+    "react-i18next": "^16.5.0",
     "reactflow": "11.11.4",
-    "lucide-react": "0.344.0",
     "recharts": "2.12.2"
   },
   "devDependencies": {
     "@types/node": "^22.14.0",
     "@vitejs/plugin-react": "^5.0.0",
     "typescript": "~5.8.2",
-    "vite": "^6.2.0"
+    "vite": "^6.2.0",
+    "vitest": "^4.0.15"
   }
 }
