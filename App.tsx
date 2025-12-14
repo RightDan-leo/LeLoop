@@ -444,6 +444,7 @@ const AppContent = () => {
               deleteKeyCode={['Backspace', 'Delete']}
               fitView
               className="bg-slate-950"
+              proOptions={{ hideAttribution: true }}
             >
               <Background color="#1e293b" gap={20} />
               <Controls className="!bg-slate-800 !border-slate-700 !shadow-xl [&>button]:!fill-slate-400 [&>button:hover]:!fill-white" />
