@@ -119,6 +119,21 @@ export const Sidebar = () => {
           </div>
         </div>
 
+        <div
+          className="bg-slate-800 p-3 rounded-lg border border-slate-700 cursor-grab hover:border-slate-400 hover:bg-slate-750 transition-all group"
+          onDragStart={(event) => onDragStart(event, NodeType.TEXT)}
+          draggable
+        >
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded bg-slate-700/50 border border-slate-500 flex items-center justify-center text-slate-300">
+              <span className="font-serif font-bold text-lg">T</span>
+            </div>
+            <div>
+              <div className="text-sm font-semibold text-slate-200">{t('nodes.text.label')}</div>
+              <div className="text-xs text-slate-400">{t('nodes.text.desc')}</div>
+            </div>
+          </div>
+        </div>
       </div>
 
       <div className="p-4 bg-slate-950 text-xs text-slate-500 border-t border-slate-800">
