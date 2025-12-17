@@ -30,40 +30,159 @@ import { exportToCSV } from './utils/csvExport';
 
 // function to get initial nodes with localized labels
 const getInitialNodes = (t: (key: string) => string): EcoNode[] => [
+  // --- Hero Growth Loop ---
   {
-    id: 'source-1',
+    id: 'src_pay',
     type: NodeType.SOURCE,
-    position: { x: 100, y: 100 },
-    data: { label: t('stats.gold_mine'), rate: 5, value: 0, id: 'source-1' },
+    position: { x: 50, y: 350 },
+    data: { label: t('nodes.source.label') + ' (Gacha)', rate: 10, value: 0, id: 'src_pay' },
   },
   {
-    id: 'pool-1',
+    id: 'pool_shards',
     type: NodeType.POOL,
-    position: { x: 100, y: 300 },
-    data: { label: t('stats.treasury'), value: 10, rate: 0, id: 'pool-1' },
+    position: { x: 250, y: 350 },
+    data: { label: 'Hero Shards', value: 1, rate: 0, id: 'pool_shards' },
+  },
+  {
+    id: 'src_gameplay',
+    type: NodeType.SOURCE,
+    position: { x: 50, y: 200 },
+    data: { label: 'Rewards', rate: 1, value: 0, id: 'src_gameplay' },
+  },
+  {
+    id: 'pool_level',
+    type: NodeType.POOL,
+    position: { x: 250, y: 200 },
+    data: { label: 'Hero Level', value: 1, rate: 0, id: 'pool_level' },
+  },
+  {
+    id: 'reg_hero_power',
+    type: NodeType.REGISTER,
+    position: { x: 250, y: 500 },
+    data: { label: 'Hero Power', value: 0, rate: 0, formula: 'a * b', id: 'reg_hero_power' },
+  },
+
+  // --- Gameplay (Conquer) Loop ---
+  {
+    id: 'pool_stamina',
+    type: NodeType.POOL,
+    position: { x: 600, y: 50 },
+    data: { label: 'Stamina', value: 10, rate: 0, id: 'pool_stamina' },
+  },
+  {
+    id: 'pool_limit',
+    type: NodeType.POOL,
+    position: { x: 750, y: 50 },
+    data: { label: 'Land Limit', value: 5, rate: 0, id: 'pool_limit' },
+  },
+  {
+    id: 'conv_conquer',
+    type: NodeType.CONVERTER,
+    position: { x: 675, y: 200 },
+    data: { label: 'Conquer', rate: 1, value: 0, id: 'conv_conquer' },
+  },
+  {
+    id: 'pool_diff',
+    type: NodeType.POOL,
+    position: { x: 800, y: 200 },
+    data: { label: 'Difficulty', value: 1, rate: 0, id: 'pool_diff' },
+  },
+  {
+    id: 'reg_validate',
+    type: NodeType.REGISTER,
+    position: { x: 800, y: 350 },
+    data: { label: 'Validation', value: 0, rate: 0, formula: 'Math.pow(a, 3) <= b ? 1 : 0', id: 'reg_validate' },
+  },
+  {
+    id: 'pool_prod_speed',
+    type: NodeType.POOL,
+    position: { x: 550, y: 200 },
+    data: { label: 'Prod Speed', value: 1, rate: 0, id: 'pool_prod_speed' },
+  },
+
+  // --- City Building Loop ---
+  {
+    id: 'reg_prod_signal', // Converts pool value to signal for splitter
+    type: NodeType.REGISTER,
+    position: { x: 550, y: 300 },
+    data: { label: 'Rate Signal', value: 0, rate: 0, formula: 'a', id: 'reg_prod_signal' }
+  },
+  {
+    id: 'split_production', // Acts as dynamic source driven by register
+    type: NodeType.SPLITTER,
+    position: { x: 550, y: 400 },
+    data: { label: 'Production', rate: 1000, value: 0, id: 'split_production' },
+  },
+  {
+    id: 'pool_resources',
+    type: NodeType.POOL,
+    position: { x: 550, y: 500 },
+    data: { label: 'Resources', value: 0, rate: 0, id: 'pool_resources' },
+  },
+  {
+    id: 'conv_upgrade',
+    type: NodeType.CONVERTER,
+    position: { x: 550, y: 650 },
+    data: { label: 'Upgrade City', rate: 1, value: 0, id: 'conv_upgrade' },
+  },
+  {
+    id: 'pool_city',
+    type: NodeType.POOL,
+    position: { x: 700, y: 650 },
+    data: { label: 'City Level', value: 1, rate: 0, id: 'pool_city' },
+  },
+  {
+    id: 'reg_cost',
+    type: NodeType.REGISTER,
+    position: { x: 400, y: 600 },
+    data: { label: 'Upgrade Cost', value: 0, rate: 0, formula: 'a * a * 10', id: 'reg_cost' },
+  },
+  {
+    id: 'reg_troop_power',
+    type: NodeType.REGISTER,
+    position: { x: 800, y: 650 },
+    data: { label: 'Troop Power', value: 0, rate: 0, formula: 'a * 10', id: 'reg_troop_power' },
+  },
+  {
+    id: 'reg_total_strength',
+    type: NodeType.REGISTER,
+    position: { x: 800, y: 500 },
+    data: { label: 'Total Strength', value: 0, rate: 0, formula: 'b + c', id: 'reg_total_strength' },
   },
 ];
 
 const INITIAL_EDGES: EcoEdge[] = [
-  {
-    id: 'e1-2',
-    source: 'source-1',
-    target: 'pool-1',
-    type: 'flow',
-    animated: true,
-    data: { rate: 1 },
-    label: '1',
-    labelStyle: { fill: '#94a3b8', fontWeight: 600, fontSize: 12 },
-    labelBgStyle: { fill: '#1e293b', fillOpacity: 0.9, rx: 4, ry: 4 },
-    labelBgPadding: [4, 2],
-    style: { stroke: '#64748b', strokeWidth: 2 },
-    markerEnd: {
-      type: MarkerType.ArrowClosed,
-      width: 20,
-      height: 20,
-      color: '#64748b',
-    },
-  }
+  // Hero Growth
+  { id: 'e_pay_shards', source: 'src_pay', target: 'pool_shards', type: 'flow', animated: true, data: { rate: 1 } },
+  { id: 'e_game_level', source: 'src_gameplay', target: 'pool_level', type: 'flow', animated: true, data: { rate: 1 } },
+  { id: 'e_level_reg', source: 'pool_level', target: 'reg_hero_power', type: 'flow', data: { rate: 0, variableName: 'a' } },
+  { id: 'e_shards_reg', source: 'pool_shards', target: 'reg_hero_power', type: 'flow', data: { rate: 0, variableName: 'b' } },
+
+  // Conquer Loop
+  { id: 'e_stamina_conq', source: 'pool_stamina', target: 'conv_conquer', type: 'flow', animated: true, data: { rate: 1 } },
+  { id: 'e_limit_conq', source: 'pool_limit', target: 'conv_conquer', type: 'flow', animated: true, data: { rate: 0 } }, // Not consumed heavily
+  { id: 'e_validate_conq', source: 'reg_validate', target: 'conv_conquer', type: 'flow', data: { rate: 1 } }, // Gate
+  { id: 'e_conq_diff', source: 'conv_conquer', target: 'pool_diff', type: 'flow', animated: true, data: { rate: 1 } },
+  { id: 'e_conq_speed', source: 'conv_conquer', target: 'pool_prod_speed', type: 'flow', animated: true, data: { rate: 1 } },
+
+  // Validation Logic
+  { id: 'e_diff_val', source: 'pool_diff', target: 'reg_validate', type: 'flow', data: { rate: 0, variableName: 'a' } },
+  { id: 'e_str_val', source: 'reg_total_strength', target: 'reg_validate', type: 'flow', data: { rate: 0, variableName: 'b' } },
+
+  // Production
+  { id: 'e_speed_sig', source: 'pool_prod_speed', target: 'reg_prod_signal', type: 'flow', data: { rate: 0, variableName: 'a' } },
+  { id: 'e_sig_split', source: 'reg_prod_signal', target: 'split_production', type: 'flow', animated: true, data: { rate: 1 } },
+  { id: 'e_split_res', source: 'split_production', target: 'pool_resources', type: 'flow', animated: true, data: { rate: 1 } },
+
+  // City Building
+  { id: 'e_res_upg', source: 'pool_resources', target: 'conv_upgrade', type: 'flow', animated: true, data: { rate: 10 } }, // Fixed cost for now
+  { id: 'e_upg_city', source: 'conv_upgrade', target: 'pool_city', type: 'flow', animated: true, data: { rate: 1 } },
+  { id: 'e_city_cost', source: 'pool_city', target: 'reg_cost', type: 'flow', data: { rate: 0, variableName: 'a' } },
+  { id: 'e_city_troop', source: 'pool_city', target: 'reg_troop_power', type: 'flow', data: { rate: 0, variableName: 'a' } },
+
+  // Strength Aggregation
+  { id: 'e_troop_total', source: 'reg_troop_power', target: 'reg_total_strength', type: 'flow', data: { rate: 0, variableName: 'b' } }, // Match b in formula
+  { id: 'e_hero_total', source: 'reg_hero_power', target: 'reg_total_strength', type: 'flow', data: { rate: 0, variableName: 'c' } }, // Match c in formula
 ];
 
 const TICK_RATE_MS = 1000;
