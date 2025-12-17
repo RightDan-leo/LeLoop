@@ -6,57 +6,62 @@ interface AnalyticsChartProps {
   history: SimulationHistoryPoint[];
   poolIds: { id: string, label: string, color: string }[];
   converterIds: { id: string, label: string, color: string }[];
+  isDarkMode: boolean;
 }
 
 const COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899'];
 
-export const AnalyticsChart: React.FC<AnalyticsChartProps> = ({ history, poolIds, converterIds }) => {
+export const AnalyticsChart: React.FC<AnalyticsChartProps> = ({ history, poolIds, converterIds, isDarkMode }) => {
   const [viewMode, setViewMode] = useState<'inventory' | 'throughput'>('inventory');
 
   // Only show last 50 ticks for performance and readability
   const data = history.slice(-50);
 
   return (
-    <div className="h-64 bg-slate-900 border-t border-slate-700 flex flex-col">
-      <div className="px-4 py-2 border-b border-slate-800 flex justify-between items-center">
+    <div className="h-64 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-700 flex flex-col transition-colors duration-300">
+      <div className="px-4 py-2 border-b border-slate-200 dark:border-slate-800 flex justify-between items-center bg-slate-50 dark:bg-slate-900">
         <div className="flex items-center gap-4">
-          <h3 className="text-sm font-semibold text-slate-300">数据分析</h3>
-          <div className="flex bg-slate-800 rounded p-0.5 border border-slate-700">
+          <h3 className="text-sm font-semibold text-slate-700 dark:text-slate-300">数据分析</h3>
+          <div className="flex bg-slate-200 dark:bg-slate-800 rounded p-0.5 border border-slate-300 dark:border-slate-700">
             <button
               onClick={() => setViewMode('inventory')}
-              className={`px-3 py-1 text-xs rounded transition-colors ${viewMode === 'inventory' ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-400 hover:text-slate-200'}`}
+              className={`px-3 py-1 text-xs rounded transition-colors ${viewMode === 'inventory' ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'}`}
             >
               库存量
             </button>
             <button
               onClick={() => setViewMode('throughput')}
-              className={`px-3 py-1 text-xs rounded transition-colors ${viewMode === 'throughput' ? 'bg-orange-600 text-white shadow-sm' : 'text-slate-400 hover:text-slate-200'}`}
+              className={`px-3 py-1 text-xs rounded transition-colors ${viewMode === 'throughput' ? 'bg-orange-600 text-white shadow-sm' : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'}`}
             >
               吞吐量
             </button>
           </div>
         </div>
-        <span className="text-xs text-slate-500">
+        <span className="text-xs text-slate-500 dark:text-slate-500">
           {viewMode === 'inventory' ? '资源池实时储量' : '转换器每秒执行次数'}
         </span>
       </div>
       <div className="flex-1 w-full p-2">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={data}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
+            <CartesianGrid strokeDasharray="3 3" stroke={isDarkMode ? "#1e293b" : "#e2e8f0"} />
             <XAxis
               dataKey="tick"
-              stroke="#64748b"
+              stroke={isDarkMode ? "#64748b" : "#94a3b8"}
               fontSize={12}
               tickFormatter={(val) => `t${val}`}
             />
-            <YAxis stroke="#64748b" fontSize={12} />
+            <YAxis stroke={isDarkMode ? "#64748b" : "#94a3b8"} fontSize={12} />
             <Tooltip
-              contentStyle={{ backgroundColor: '#0f172a', borderColor: '#334155', color: '#f1f5f9' }}
+              contentStyle={{
+                backgroundColor: isDarkMode ? '#0f172a' : '#ffffff',
+                borderColor: isDarkMode ? '#334155' : '#e2e8f0',
+                color: isDarkMode ? '#f1f5f9' : '#0f172a'
+              }}
               itemStyle={{ fontSize: 12 }}
               labelStyle={{ color: '#94a3b8', marginBottom: 5 }}
             />
-            <Legend />
+            <Legend wrapperStyle={{ paddingTop: '10px' }} />
 
             {viewMode === 'inventory'
               ? poolIds.map((pool, index) => (

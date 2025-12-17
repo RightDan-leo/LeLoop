@@ -14,7 +14,7 @@ import ReactFlow, {
   MarkerType,
 } from 'reactflow';
 // import 'reactflow/dist/style.css'; // Removed: handled via CDN in index.html to avoid loader issues
-import { Play, Pause, RotateCcw, Activity, StepForward, Download, Upload, Languages } from 'lucide-react';
+import { Play, Pause, RotateCcw, Activity, StepForward, Download, Upload, Languages, Sun, Moon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 import { NodeType, EcoNode, EcoEdge, SimulationState, NodeData, EdgeData } from './types';
@@ -30,159 +30,40 @@ import { exportToCSV } from './utils/csvExport';
 
 // function to get initial nodes with localized labels
 const getInitialNodes = (t: (key: string) => string): EcoNode[] => [
-  // --- Hero Growth Loop ---
   {
-    id: 'src_pay',
+    id: 'source-1',
     type: NodeType.SOURCE,
-    position: { x: 50, y: 350 },
-    data: { label: t('nodes.source.label') + ' (Gacha)', rate: 10, value: 0, id: 'src_pay' },
+    position: { x: 100, y: 100 },
+    data: { label: t('stats.gold_mine'), rate: 5, value: 0, id: 'source-1' },
   },
   {
-    id: 'pool_shards',
+    id: 'pool-1',
     type: NodeType.POOL,
-    position: { x: 250, y: 350 },
-    data: { label: 'Hero Shards', value: 1, rate: 0, id: 'pool_shards' },
-  },
-  {
-    id: 'src_gameplay',
-    type: NodeType.SOURCE,
-    position: { x: 50, y: 200 },
-    data: { label: 'Rewards', rate: 1, value: 0, id: 'src_gameplay' },
-  },
-  {
-    id: 'pool_level',
-    type: NodeType.POOL,
-    position: { x: 250, y: 200 },
-    data: { label: 'Hero Level', value: 1, rate: 0, id: 'pool_level' },
-  },
-  {
-    id: 'reg_hero_power',
-    type: NodeType.REGISTER,
-    position: { x: 250, y: 500 },
-    data: { label: 'Hero Power', value: 0, rate: 0, formula: 'a * b', id: 'reg_hero_power' },
-  },
-
-  // --- Gameplay (Conquer) Loop ---
-  {
-    id: 'pool_stamina',
-    type: NodeType.POOL,
-    position: { x: 600, y: 50 },
-    data: { label: 'Stamina', value: 10, rate: 0, id: 'pool_stamina' },
-  },
-  {
-    id: 'pool_limit',
-    type: NodeType.POOL,
-    position: { x: 750, y: 50 },
-    data: { label: 'Land Limit', value: 5, rate: 0, id: 'pool_limit' },
-  },
-  {
-    id: 'conv_conquer',
-    type: NodeType.CONVERTER,
-    position: { x: 675, y: 200 },
-    data: { label: 'Conquer', rate: 1, value: 0, id: 'conv_conquer' },
-  },
-  {
-    id: 'pool_diff',
-    type: NodeType.POOL,
-    position: { x: 800, y: 200 },
-    data: { label: 'Difficulty', value: 1, rate: 0, id: 'pool_diff' },
-  },
-  {
-    id: 'reg_validate',
-    type: NodeType.REGISTER,
-    position: { x: 800, y: 350 },
-    data: { label: 'Validation', value: 0, rate: 0, formula: 'Math.pow(a, 3) <= b ? 1 : 0', id: 'reg_validate' },
-  },
-  {
-    id: 'pool_prod_speed',
-    type: NodeType.POOL,
-    position: { x: 550, y: 200 },
-    data: { label: 'Prod Speed', value: 1, rate: 0, id: 'pool_prod_speed' },
-  },
-
-  // --- City Building Loop ---
-  {
-    id: 'reg_prod_signal', // Converts pool value to signal for splitter
-    type: NodeType.REGISTER,
-    position: { x: 550, y: 300 },
-    data: { label: 'Rate Signal', value: 0, rate: 0, formula: 'a', id: 'reg_prod_signal' }
-  },
-  {
-    id: 'split_production', // Acts as dynamic source driven by register
-    type: NodeType.SPLITTER,
-    position: { x: 550, y: 400 },
-    data: { label: 'Production', rate: 1000, value: 0, id: 'split_production' },
-  },
-  {
-    id: 'pool_resources',
-    type: NodeType.POOL,
-    position: { x: 550, y: 500 },
-    data: { label: 'Resources', value: 0, rate: 0, id: 'pool_resources' },
-  },
-  {
-    id: 'conv_upgrade',
-    type: NodeType.CONVERTER,
-    position: { x: 550, y: 650 },
-    data: { label: 'Upgrade City', rate: 1, value: 0, id: 'conv_upgrade' },
-  },
-  {
-    id: 'pool_city',
-    type: NodeType.POOL,
-    position: { x: 700, y: 650 },
-    data: { label: 'City Level', value: 1, rate: 0, id: 'pool_city' },
-  },
-  {
-    id: 'reg_cost',
-    type: NodeType.REGISTER,
-    position: { x: 400, y: 600 },
-    data: { label: 'Upgrade Cost', value: 0, rate: 0, formula: 'a * a * 10', id: 'reg_cost' },
-  },
-  {
-    id: 'reg_troop_power',
-    type: NodeType.REGISTER,
-    position: { x: 800, y: 650 },
-    data: { label: 'Troop Power', value: 0, rate: 0, formula: 'a * 10', id: 'reg_troop_power' },
-  },
-  {
-    id: 'reg_total_strength',
-    type: NodeType.REGISTER,
-    position: { x: 800, y: 500 },
-    data: { label: 'Total Strength', value: 0, rate: 0, formula: 'b + c', id: 'reg_total_strength' },
+    position: { x: 100, y: 300 },
+    data: { label: t('stats.treasury'), value: 10, rate: 0, id: 'pool-1' },
   },
 ];
 
 const INITIAL_EDGES: EcoEdge[] = [
-  // Hero Growth
-  { id: 'e_pay_shards', source: 'src_pay', target: 'pool_shards', type: 'flow', animated: true, data: { rate: 1 } },
-  { id: 'e_game_level', source: 'src_gameplay', target: 'pool_level', type: 'flow', animated: true, data: { rate: 1 } },
-  { id: 'e_level_reg', source: 'pool_level', target: 'reg_hero_power', type: 'flow', data: { rate: 0, variableName: 'a' } },
-  { id: 'e_shards_reg', source: 'pool_shards', target: 'reg_hero_power', type: 'flow', data: { rate: 0, variableName: 'b' } },
-
-  // Conquer Loop
-  { id: 'e_stamina_conq', source: 'pool_stamina', target: 'conv_conquer', type: 'flow', animated: true, data: { rate: 1 } },
-  { id: 'e_limit_conq', source: 'pool_limit', target: 'conv_conquer', type: 'flow', animated: true, data: { rate: 0 } }, // Not consumed heavily
-  { id: 'e_validate_conq', source: 'reg_validate', target: 'conv_conquer', type: 'flow', data: { rate: 1 } }, // Gate
-  { id: 'e_conq_diff', source: 'conv_conquer', target: 'pool_diff', type: 'flow', animated: true, data: { rate: 1 } },
-  { id: 'e_conq_speed', source: 'conv_conquer', target: 'pool_prod_speed', type: 'flow', animated: true, data: { rate: 1 } },
-
-  // Validation Logic
-  { id: 'e_diff_val', source: 'pool_diff', target: 'reg_validate', type: 'flow', data: { rate: 0, variableName: 'a' } },
-  { id: 'e_str_val', source: 'reg_total_strength', target: 'reg_validate', type: 'flow', data: { rate: 0, variableName: 'b' } },
-
-  // Production
-  { id: 'e_speed_sig', source: 'pool_prod_speed', target: 'reg_prod_signal', type: 'flow', data: { rate: 0, variableName: 'a' } },
-  { id: 'e_sig_split', source: 'reg_prod_signal', target: 'split_production', type: 'flow', animated: true, data: { rate: 1 } },
-  { id: 'e_split_res', source: 'split_production', target: 'pool_resources', type: 'flow', animated: true, data: { rate: 1 } },
-
-  // City Building
-  { id: 'e_res_upg', source: 'pool_resources', target: 'conv_upgrade', type: 'flow', animated: true, data: { rate: 10 } }, // Fixed cost for now
-  { id: 'e_upg_city', source: 'conv_upgrade', target: 'pool_city', type: 'flow', animated: true, data: { rate: 1 } },
-  { id: 'e_city_cost', source: 'pool_city', target: 'reg_cost', type: 'flow', data: { rate: 0, variableName: 'a' } },
-  { id: 'e_city_troop', source: 'pool_city', target: 'reg_troop_power', type: 'flow', data: { rate: 0, variableName: 'a' } },
-
-  // Strength Aggregation
-  { id: 'e_troop_total', source: 'reg_troop_power', target: 'reg_total_strength', type: 'flow', data: { rate: 0, variableName: 'b' } }, // Match b in formula
-  { id: 'e_hero_total', source: 'reg_hero_power', target: 'reg_total_strength', type: 'flow', data: { rate: 0, variableName: 'c' } }, // Match c in formula
+  {
+    id: 'e1-2',
+    source: 'source-1',
+    target: 'pool-1',
+    type: 'flow',
+    animated: true,
+    data: { rate: 1 },
+    label: '1',
+    labelStyle: { fill: '#94a3b8', fontWeight: 600, fontSize: 12 },
+    labelBgStyle: { fill: '#1e293b', fillOpacity: 0.9, rx: 4, ry: 4 },
+    labelBgPadding: [4, 2],
+    style: { stroke: '#64748b', strokeWidth: 2 },
+    markerEnd: {
+      type: MarkerType.ArrowClosed,
+      width: 20,
+      height: 20,
+      color: '#64748b',
+    },
+  }
 ];
 
 const TICK_RATE_MS = 1000;
@@ -217,6 +98,21 @@ const getEdgeLabel = (data?: EdgeData) => {
 const AppContent = () => {
   const { t, i18n } = useTranslation();
   const reactFlowInstance = useReactFlow();
+
+  // Theme State (Default: Day Mode/Light)
+  const [isDarkMode, setIsDarkMode] = useState(false);
+
+  useEffect(() => {
+    if (isDarkMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [isDarkMode]);
+
+  const toggleTheme = useCallback(() => {
+    setIsDarkMode(prev => !prev);
+  }, []);
 
   const toggleLanguage = useCallback(() => {
     const newLang = i18n.language === 'zh' ? 'en' : 'zh';
@@ -302,7 +198,7 @@ const AppContent = () => {
 
       setNodes((nds) => nds.concat(newNode));
     },
-    [reactFlowInstance, setNodes]
+    [reactFlowInstance, setNodes, t]
   );
 
   const onNodeClick = useCallback((_: React.MouseEvent, node: Node) => {
@@ -414,7 +310,7 @@ const AppContent = () => {
 
     // Clear input so the same file can be selected again if needed
     event.target.value = '';
-  }, [setNodes, setEdges, resetSimulation]);
+  }, [setNodes, setEdges, resetSimulation, t]);
 
   // --- Simulation Logic ---
 
@@ -447,7 +343,7 @@ const AppContent = () => {
     [nodes]);
 
   return (
-    <div className="flex flex-col h-screen w-screen bg-slate-950 text-white">
+    <div className={`w-screen h-screen flex flex-col bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors duration-300`}>
       {/* Hidden File Input for Loading */}
       <input
         type="file"
@@ -457,91 +353,101 @@ const AppContent = () => {
         className="hidden"
       />
 
-      {/* Header */}
-      <header className="h-14 bg-slate-900 border-b border-slate-800 flex items-center justify-between px-4 shrink-0">
+      {/* Header / Toolbar */}
+      <header className="h-14 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-800 flex items-center justify-between px-4 z-30 shrink-0 shadow-sm transition-colors duration-300">
         <div className="flex items-center gap-2">
-          <div className="bg-blue-600 p-1.5 rounded">
-            <Activity size={20} className="text-white" />
+          <div className="bg-blue-600 p-1.5 rounded-lg shadow-lg shadow-blue-500/30">
+            <Activity className="text-white" size={20} />
           </div>
-          <h1 className="font-bold text-lg tracking-tight">{t('app.title')} <span className="text-blue-500">{t('app.title_suffix')}</span></h1>
-        </div>
-
-        <div className="flex items-center gap-4 bg-slate-800 p-1 rounded-lg border border-slate-700">
-          <button
-            onClick={togglePlay}
-            className={`flex items-center gap-2 px-4 py-1.5 rounded-md text-sm font-medium transition-all ${simState.isPlaying
-              ? 'bg-amber-500/10 text-amber-500 hover:bg-amber-500/20'
-              : 'bg-emerald-500 text-slate-900 hover:bg-emerald-400'
-              }`}
-          >
-            {simState.isPlaying ? <><Pause size={16} /> {t('actions.pause')}</> : <><Play size={16} fill="currentColor" /> {t('actions.run')}</>}
-          </button>
-
-          <div className="h-4 w-[1px] bg-slate-600"></div>
-
-          <button
-            onClick={stepForward}
-            className="flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-700 transition-colors"
-            title={t('actions.step')}
-          >
-            <StepForward size={16} />
-            <span className="hidden sm:inline">{t('actions.step')}</span>
-          </button>
-
-          <div className="h-4 w-[1px] bg-slate-600"></div>
-
-          <button
-            onClick={resetSimulation}
-            className="flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-700 transition-colors"
-            title={t('actions.reset')}
-          >
-            <RotateCcw size={16} />
-          </button>
+          <h1 className="font-bold text-lg tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400">
+            {t('app.title')} <span className="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider ml-1">{t('app.title_suffix')}</span>
+          </h1>
         </div>
 
         <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2 bg-slate-800 p-1 rounded-lg border border-slate-700 mr-4">
+          {/* Control Buttons Group */}
+          <div className="flex items-center gap-1 bg-slate-100 dark:bg-slate-800 p-1 rounded-lg border border-slate-200 dark:border-slate-700">
+            {/* Run/Pause/Step/Reset buttons (Update their classes to be generic or dark mode aware) */}
+            {/* For brevity, assuming existing buttons just need text-slate-xxx updates or usually inherit color */}
+            <button
+              onClick={togglePlay}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-all ${simState.isPlaying
+                ? 'bg-amber-500/10 text-amber-600 dark:text-amber-400 hover:bg-amber-500/20'
+                : 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/30 hover:bg-emerald-600'
+                }`}
+            >
+              {simState.isPlaying ? <Pause size={16} /> : <Play size={16} />}
+              {simState.isPlaying ? t('actions.pause') : t('actions.run')}
+            </button>
+
+            <div className="w-px h-6 bg-slate-300 dark:bg-slate-700 mx-1" />
+
+            <button
+              onClick={stepForward}
+              disabled={simState.isPlaying}
+              className="p-1.5 text-slate-600 dark:text-slate-400 hover:text-blue-500 dark:hover:text-blue-400 hover:bg-slate-200 dark:hover:bg-slate-700 rounded disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              title={t('actions.step')}
+            >
+              <StepForward size={18} />
+            </button>
+
+            <button
+              onClick={resetSimulation}
+              className="p-1.5 text-slate-600 dark:text-slate-400 hover:text-red-500 dark:hover:text-red-400 hover:bg-slate-200 dark:hover:bg-slate-700 rounded transition-colors"
+              title={t('actions.reset')}
+            >
+              <RotateCcw size={18} />
+            </button>
+          </div>
+
+          {/* Right Side Tools */}
+          <div className="flex items-center gap-2">
             <button
               onClick={handleSave}
-              className="flex items-center gap-2 px-3 py-1.5 rounded-md text-xs font-medium text-slate-400 hover:text-white hover:bg-slate-700 transition-colors"
-              title={t('actions.save')}
+              className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
             >
-              <Download size={14} />
-              {t('actions.save_btn')}
+              <Download size={14} /> {t('actions.save')}
             </button>
-            <div className="h-4 w-[1px] bg-slate-600"></div>
             <button
-              onClick={handleLoadClick}
-              className="flex items-center gap-2 px-3 py-1.5 rounded-md text-xs font-medium text-slate-400 hover:text-white hover:bg-slate-700 transition-colors"
-              title={t('actions.load')}
+              onClick={() => fileInputRef.current?.click()}
+              className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
             >
-              <Upload size={14} />
-              {t('actions.load_btn')}
+              <Upload size={14} /> {t('actions.load')}
             </button>
-            <div className="h-4 w-[1px] bg-slate-600"></div>
             <button
               onClick={handleExportCSV}
-              className="flex items-center gap-2 px-3 py-1.5 rounded-md text-xs font-medium text-slate-400 hover:text-white hover:bg-slate-700 transition-colors"
-              title={t('actions.export')}
+              className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
             >
-              <Download size={14} className="rotate-180" />
-              {t('actions.export_btn')}
+              <Download size={14} /> {t('actions.export')}
             </button>
-          </div>
 
-          <div className="flex flex-col items-end">
-            <span className="text-slate-400 text-xs uppercase tracking-wider">{t('app.tick')}</span>
-            <span className="font-mono text-blue-400 font-bold">{simState.tick}</span>
-          </div>
+            <div className="w-px h-6 bg-slate-200 dark:bg-slate-800 mx-1" />
 
-          <button
-            onClick={toggleLanguage}
-            className="flex items-center gap-2 px-3 py-1.5 rounded-md text-xs font-medium text-slate-400 hover:text-white hover:bg-slate-700 transition-colors ml-2"
-            title="Switch Language"
-          >
-            <Languages size={16} />
-            <span className="uppercase">{i18n.language}</span>
-          </button>
+            {/* Theme Toggle */}
+            <button
+              onClick={toggleTheme}
+              className="p-2 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors"
+              title={isDarkMode ? 'Day Mode' : 'Night Mode'}
+            >
+              {isDarkMode ? <Sun size={18} /> : <Moon size={18} />}
+            </button>
+
+            {/* Language Toggle */}
+            <div className="flex items-center gap-2 ml-2 pl-2 border-l border-slate-200 dark:border-slate-800">
+              <button
+                onClick={toggleLanguage}
+                className="flex items-center gap-1 text-xs font-medium text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"
+              >
+                <Languages size={14} />
+                <span className="uppercase">{i18n.language}</span>
+              </button>
+            </div>
+
+            <div className="text-right ml-4">
+              <div className="text-[10px] text-slate-400 dark:text-slate-500 font-medium uppercase tracking-wider">{t('app.tick')}</div>
+              <div className="text-xl font-mono font-bold text-blue-600 dark:text-blue-400 leading-none">{simState.tick}</div>
+            </div>
+          </div>
         </div>
       </header>
 
@@ -564,11 +470,11 @@ const AppContent = () => {
               onPaneClick={onPaneClick}
               deleteKeyCode={['Backspace', 'Delete']}
               fitView
-              className="bg-slate-950"
+              className="bg-white dark:bg-slate-950 transition-colors duration-300"
               proOptions={{ hideAttribution: true }}
             >
-              <Background color="#1e293b" gap={20} />
-              <Controls className="!bg-slate-800 !border-slate-700 !shadow-xl [&>button]:!fill-slate-400 [&>button:hover]:!fill-white" />
+              <Background color={isDarkMode ? "#1e293b" : "#e2e8f0"} gap={20} />
+              <Controls className="!bg-white dark:!bg-slate-800 !border-slate-200 dark:!border-slate-700 !shadow-xl [&>button]:!fill-slate-600 dark:[&>button]:!fill-slate-400 [&>button:hover]:!fill-slate-900 dark:[&>button:hover]:!fill-white" />
 
               {/* Floating Properties Panel */}
               <PropertiesPanel
@@ -586,6 +492,7 @@ const AppContent = () => {
             history={simState.history}
             poolIds={poolIds}
             converterIds={converterIds}
+            isDarkMode={isDarkMode}
           />
         </div>
       </div>
