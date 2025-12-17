@@ -46,6 +46,10 @@
             "label": "Merger",
             "desc": "Combines resources"
         },
+        "register": {
+            "label": "Register",
+            "desc": "Executes custom formula"
+        },
         "text": {
             "label": "Text",
             "desc": "Add annotation"

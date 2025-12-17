@@ -112,6 +112,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
             const isPool = selectedNode.type === NodeType.POOL;
             const isConverter = selectedNode.type === NodeType.CONVERTER;
             const isText = selectedNode.type === NodeType.TEXT;
+            const isRegister = selectedNode.type === NodeType.REGISTER;
 
             return (
                 <div className="space-y-4">
@@ -194,6 +195,23 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
                         </>
                     )}
 
+                    {isRegister && (
+                        <div>
+                            <label className="block text-xs font-medium text-slate-400 mb-1">公式 (Javascript 表达式)</label>
+                            <input
+                                type="text"
+                                value={selectedNode.data.formula || ''}
+                                onChange={(e) => handleNodeChange('formula', e.target.value)}
+                                className="w-full bg-slate-800 border border-slate-600 rounded px-2 py-1.5 text-sm text-white focus:ring-1 focus:ring-blue-500 focus:outline-none"
+                                placeholder="例如: a * a <= b"
+                            />
+                            <p className="text-[10px] text-slate-500 mt-2">
+                                使用连线上的<b>变量名</b>作为参数。<br />
+                                支持数学运算 (+, -, *, /) 和逻辑运算 (&lt;, &gt;, ==).
+                            </p>
+                        </div>
+                    )}
+
                     <div className="pt-2 border-t border-slate-700">
                         <p className="text-[10px] text-slate-500">ID: {selectedNode.id}</p>
                     </div>
@@ -212,6 +230,18 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
                         <div className="text-[10px] text-blue-200/70">
                             定义资源流动的数量或配方。支持随机波动。
                         </div>
+                    </div>
+
+                    {/* Variable Name for Formula input */}
+                    <div>
+                        <label className="block text-xs font-medium text-slate-400 mb-1">变量名 (仅限连接到寄存器)</label>
+                        <input
+                            type="text"
+                            value={selectedEdge.data?.variableName || ''}
+                            onChange={(e) => handleEdgeChange('variableName', e.target.value)}
+                            className="w-full bg-slate-900 border border-slate-600 rounded px-2 py-1.5 text-sm text-white focus:ring-1 focus:ring-blue-500 focus:outline-none"
+                            placeholder="例如: a, b (用于公式)"
+                        />
                     </div>
 
                     {renderRateInputs(
@@ -235,6 +265,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
             );
         }
     };
+
 
     return (
         <div className="absolute top-4 right-4 w-72 bg-slate-900/95 backdrop-blur-md border border-slate-700 rounded-lg shadow-2xl z-50 overflow-hidden flex flex-col animate-in fade-in slide-in-from-right-10 duration-200">

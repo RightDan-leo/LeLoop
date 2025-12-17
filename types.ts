@@ -8,6 +8,7 @@ export enum NodeType {
   SPLITTER = 'splitter',
   MERGER = 'merger',
   TEXT = 'text',
+  REGISTER = 'register',
 }
 
 export interface NodeData {
@@ -28,6 +29,9 @@ export interface NodeData {
 
   // For Text Node
   fontSize?: number;
+
+  // For Register Node
+  formula?: string; // e.g. "a * b"
 }
 
 export interface EdgeData {
@@ -35,6 +39,9 @@ export interface EdgeData {
   rate: number;
   rateMax?: number;
   isRandom?: boolean;
+
+  // For connecting to Register Node
+  variableName?: string; // e.g. "a", "b"
 }
 
 export type EcoNode = Node<NodeData>;

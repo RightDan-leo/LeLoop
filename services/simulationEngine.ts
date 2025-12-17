@@ -33,6 +33,53 @@ export const runSimulationTick = (nodes: EcoNode[], edges: EcoEdge[]): { nextNod
   const getSources = (targetId: string) => edges.filter(e => e.target === targetId);
   const getTargets = (sourceId: string) => edges.filter(e => e.source === sourceId);
 
+  // 0. Process Register Nodes (Formulas) - Calculate signals first
+  const registers = nextNodes.filter(n => n.type === NodeType.REGISTER);
+
+  // Sort registers to handle simple dependencies? (For now, assumes acyclic or single-pass order)
+  // To strictly support chains (A->B->C), we might need topological sort, but for now simple pass.
+  registers.forEach(reg => {
+    const inputEdges = getSources(reg.id);
+    const variables: Record<string, number> = {};
+
+    inputEdges.forEach(edge => {
+      const sourceNode = nodeMap.get(edge.source);
+      if (sourceNode && edge.data?.variableName) {
+        // Get value based on source type
+        let val = 0;
+        if (sourceNode.type === NodeType.POOL || sourceNode.type === NodeType.REGISTER) {
+          val = sourceNode.data.value;
+        } else if (sourceNode.type === NodeType.SOURCE) {
+          val = sourceNode.data.rate; // Source gives its rate as a value signal
+        }
+        variables[edge.data.variableName] = val;
+      }
+    });
+
+    // Evaluate Formula
+    if (reg.data.formula) {
+      try {
+        // Create function with variable names
+        const varNames = Object.keys(variables);
+        const varValues = Object.values(variables);
+
+        // Allow math functions in formula without "Math." prefix if desired, or just standard JS
+        // "return a * b"
+        const func = new Function(...varNames, `return ${reg.data.formula};`);
+        const result = func(...varValues);
+
+        // Convert boolean to 1/0, ensure number
+        reg.data.value = Number(result);
+      } catch (e) {
+        // console.warn(`Formula error in node ${reg.id}:`, e);
+        reg.data.value = 0; // Default to 0 on error
+      }
+    } else {
+      // If no formula, maybe just sum inputs? or 0.
+      reg.data.value = 0;
+    }
+  });
+
   // 1. Process Converters
   const converters = nextNodes.filter(n => n.type === NodeType.CONVERTER);
 
@@ -59,10 +106,18 @@ export const runSimulationTick = (nodes: EcoNode[], edges: EcoEdge[]): { nextNod
         // Store the cost for the execution phase
         currentIterationCosts.set(edge.id, requiredAmount);
 
-        if (sourceNode && sourceNode.type === NodeType.POOL) {
-          if (sourceNode.data.value < requiredAmount) {
-            canConvert = false;
-            break;
+        if (sourceNode) {
+          if (sourceNode.type === NodeType.POOL) {
+            if (sourceNode.data.value < requiredAmount) {
+              canConvert = false;
+              break;
+            }
+          } else if (sourceNode.type === NodeType.REGISTER) {
+            // Register acts as a gate/signal. value must be >= requiredAmount
+            if (sourceNode.data.value < requiredAmount) {
+              canConvert = false;
+              break;
+            }
           }
         }
       }
@@ -79,6 +134,7 @@ export const runSimulationTick = (nodes: EcoNode[], edges: EcoEdge[]): { nextNod
           if (sourceNode && sourceNode.type === NodeType.POOL) {
             sourceNode.data.value -= amount;
           }
+          // Registers are NOT consumed
         });
 
         // 2. Produce Outputs
@@ -149,12 +205,20 @@ export const runSimulationTick = (nodes: EcoNode[], edges: EcoEdge[]): { nextNod
     for (const edge of inputs) {
       if (gathered >= throughput) break;
       const sourceNode = nodeMap.get(edge.source);
-      if (sourceNode && sourceNode.type === NodeType.POOL) {
-        const available = sourceNode.data.value;
-        const canTake = Math.min(available, throughput - gathered);
+      if (sourceNode) {
+        if (sourceNode.type === NodeType.POOL) {
+          const available = sourceNode.data.value;
+          const canTake = Math.min(available, throughput - gathered);
 
-        sourceNode.data.value -= canTake;
-        gathered += canTake;
+          sourceNode.data.value -= canTake;
+          gathered += canTake;
+        } else if (sourceNode.type === NodeType.REGISTER) {
+          // Registers contribute specific amount (value) without being consumed
+          // Use minimal logic here: Register gives 'value' amount towards throughput
+          const available = sourceNode.data.value;
+          const canTake = Math.min(available, throughput - gathered);
+          gathered += canTake;
+        }
       }
     }
 
@@ -199,12 +263,18 @@ export const runSimulationTick = (nodes: EcoNode[], edges: EcoEdge[]): { nextNod
     for (const edge of inputs) {
       if (gathered >= throughput) break;
       const sourceNode = nodeMap.get(edge.source);
-      if (sourceNode && sourceNode.type === NodeType.POOL) {
-        const available = sourceNode.data.value;
-        const canTake = Math.min(available, throughput - gathered);
+      if (sourceNode) {
+        if (sourceNode.type === NodeType.POOL) {
+          const available = sourceNode.data.value;
+          const canTake = Math.min(available, throughput - gathered);
 
-        sourceNode.data.value -= canTake;
-        gathered += canTake;
+          sourceNode.data.value -= canTake;
+          gathered += canTake;
+        } else if (sourceNode.type === NodeType.REGISTER) {
+          const available = sourceNode.data.value;
+          const canTake = Math.min(available, throughput - gathered);
+          gathered += canTake;
+        }
       }
     }
 

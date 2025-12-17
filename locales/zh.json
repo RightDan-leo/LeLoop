@@ -46,6 +46,10 @@
             "label": "汇聚器",
             "desc": "合并资源"
         },
+        "register": {
+            "label": "寄存器",
+            "desc": "执行自定义公式"
+        },
         "text": {
             "label": "文本",
             "desc": "添加注释"

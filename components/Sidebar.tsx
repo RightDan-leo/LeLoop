@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { NodeType } from '../types';
-import { ArrowUp, Database, ArrowDown, RefreshCw, LayoutGrid, Split, Merge } from 'lucide-react';
+import { ArrowUp, Database, ArrowDown, RefreshCw, LayoutGrid, Split, Merge, FunctionSquare } from 'lucide-react';
 
 export const Sidebar = () => {
   const { t } = useTranslation();
@@ -115,6 +115,22 @@ export const Sidebar = () => {
             <div>
               <div className="text-sm font-semibold text-violet-100">{t('nodes.merger.label')}</div>
               <div className="text-xs text-slate-400">{t('nodes.merger.desc')}</div>
+            </div>
+          </div>
+        </div>
+
+        <div
+          className="bg-slate-800 p-3 rounded-lg border border-slate-700 cursor-grab hover:border-pink-500 hover:bg-slate-750 transition-all group"
+          onDragStart={(event) => onDragStart(event, NodeType.REGISTER)}
+          draggable
+        >
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded bg-slate-900 border border-pink-500 flex items-center justify-center text-pink-500">
+              <FunctionSquare size={16} />
+            </div>
+            <div>
+              <div className="text-sm font-semibold text-pink-100">{t('nodes.register.label') || '寄存器'}</div>
+              <div className="text-xs text-slate-400">{t('nodes.register.desc') || '执行自定义公式'}</div>
             </div>
           </div>
         </div>

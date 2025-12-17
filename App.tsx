@@ -19,7 +19,7 @@ import { useTranslation } from 'react-i18next';
 
 import { NodeType, EcoNode, EcoEdge, SimulationState, NodeData, EdgeData } from './types';
 import { Sidebar } from './components/Sidebar';
-import { SourceNode, PoolNode, DrainNode, ConverterNode, SplitterNode, MergerNode, TextNode } from './components/CustomNodes';
+import { SourceNode, PoolNode, DrainNode, ConverterNode, SplitterNode, MergerNode, TextNode, RegisterNode } from './components/CustomNodes';
 import { FlowEdge } from './components/FlowEdge';
 import { PropertiesPanel } from './components/PropertiesPanel';
 import { AnalyticsChart } from './components/AnalyticsChart';
@@ -77,6 +77,7 @@ const nodeTypes = {
   splitter: SplitterNode,
   merger: MergerNode,
   text: TextNode,
+  register: RegisterNode,
 };
 
 const edgeTypes = {
@@ -175,6 +176,7 @@ const AppContent = () => {
           value: 0,
           // Converter rate now means "Throughput" (executions per tick), default to 1
           rate: type === NodeType.CONVERTER ? 1 : (type === NodeType.TEXT ? 0 : 5),
+          formula: type === NodeType.REGISTER ? '' : undefined,
           id: newNodeId // for tracking
         },
       };

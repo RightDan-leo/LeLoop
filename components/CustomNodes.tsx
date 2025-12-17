@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
 import { Handle, Position, NodeProps } from 'reactflow';
 import { NodeData } from '../types';
-import { ArrowDown, ArrowUp, RefreshCw, Database, Split, Merge } from 'lucide-react';
+import { ArrowDown, ArrowUp, RefreshCw, Database, Split, Merge, FunctionSquare } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 const BaseNodeWrapper = ({
@@ -198,5 +198,32 @@ export const TextNode = memo(({ data, selected }: NodeProps<NodeData>) => {
         {data.label}
       </div>
     </div>
+  );
+});
+
+// --- Register Node (Formula) ---
+export const RegisterNode = memo(({ data, selected }: NodeProps<NodeData>) => {
+  return (
+    <BaseNodeWrapper selected={selected}>
+      <Handle type="target" position={Position.Top} className="!bg-pink-500 !w-3 !h-3" />
+
+      <div className="w-14 h-14 bg-slate-900 border-2 border-pink-500 flex items-center justify-center shadow-[0_0_15px_rgba(236,72,153,0.3)]">
+        <div className="flex flex-col items-center text-pink-500">
+          <FunctionSquare size={24} />
+        </div>
+      </div>
+
+      {/* Value Display */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-xs font-bold text-white pointer-events-none mt-8 bg-slate-800/80 px-2 rounded border border-pink-500/50">
+        {Math.round(data.value * 100) / 100}
+      </div>
+
+      <div className="absolute -bottom-10 text-xs text-pink-400 font-semibold whitespace-nowrap bg-slate-900/80 px-2 py-0.5 rounded max-w-[120px] overflow-hidden text-ellipsis grid justify-items-center">
+        <span>{data.label}</span>
+        <span className="text-[9px] text-slate-500 font-mono">{data.formula || "No Formula"}</span>
+      </div>
+
+      <Handle type="source" position={Position.Bottom} className="!bg-pink-500 !w-3 !h-3" />
+    </BaseNodeWrapper>
   );
 });
